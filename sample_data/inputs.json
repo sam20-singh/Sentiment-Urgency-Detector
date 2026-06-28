@@ -1,0 +1,17 @@
+[
+  {
+    "ticket_id": "T-001",
+    "text": "This is absolutely unacceptable! I have been waiting 3 weeks for a response. Our entire team is blocked and we are losing thousands of dollars a day. If this is not resolved by Friday I am canceling our enterprise contract and switching to your competitor.",
+    "source": "zendesk"
+  },
+  {
+    "ticket_id": "T-002",
+    "text": "Hi team, we just wanted to say thank you for the latest update! The new dashboard features are incredible and have sped up our workflow significantly. Keep up the great work!",
+    "source": "email"
+  },
+  {
+    "ticket_id": "T-003",
+    "text": "Hello, I am trying to figure out how to update my billing credit card. The interface on the settings page seems to be grayed out for me. Any help would be appreciated.",
+    "source": "intercom"
+  }
+]

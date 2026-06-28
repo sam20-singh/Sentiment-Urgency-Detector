@@ -1,0 +1,26 @@
+[
+  {
+    "ticket_id": "T-001",
+    "sentiment_score": 1,
+    "urgency_score": 10,
+    "tone": "Extremely Frustrated",
+    "is_churn_risk": true,
+    "draft_reply": "Hi there, I am incredibly sorry to hear about the blockers and the severe impact this has had on your team. I am escalating this to our highest tier support engineers right now to get this resolved before Friday. We value your partnership and want to make this right."
+  },
+  {
+    "ticket_id": "T-002",
+    "sentiment_score": 10,
+    "urgency_score": 1,
+    "tone": "Enthusiastic and Grateful",
+    "is_churn_risk": false,
+    "draft_reply": "Hi! Thank you so much for the kind words! Our engineering team worked really hard on those new dashboard features, and it is thrilling to hear they are speeding up your workflow. We will pass this feedback right to them!"
+  },
+  {
+    "ticket_id": "T-003",
+    "sentiment_score": 5,
+    "urgency_score": 3,
+    "tone": "Neutral",
+    "is_churn_risk": false,
+    "draft_reply": "Hello! I would be happy to help you update your billing information. Since the interface is grayed out, this usually means you do not have 'Admin' privileges on the account. Could you please check with your workspace owner to grant you billing access, or have them update it?"
+  }
+]
