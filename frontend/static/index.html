@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sentinel — Sentiment &amp; Urgency Detector</title>
+  <meta name="description" content="AI-powered customer support ticket analyzer. Detect sentiment, urgency, and churn risk with real-time Discord alerts." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <!-- Animated background particles -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Toast container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <div class="app">
+
+    <!-- ═══ Header ═══ -->
+    <header class="header reveal">
+      <div class="header__brand">
+        <div class="header__logo">
+          <div class="header__logo-glow"></div>
+          <span class="header__icon">🛡️</span>
+        </div>
+        <div>
+          <h1 class="header__title">Sentinel</h1>
+          <p class="header__subtitle">Sentiment &amp; Urgency Detector</p>
+        </div>
+      </div>
+      <div class="header__actions">
+        <div class="header__status">
+          <span id="status-dot" class="status-dot"></span>
+          <span id="status-label">Checking…</span>
+        </div>
+        <div class="header__badge">AI-Powered</div>
+      </div>
+    </header>
+
+    <!-- ═══ Stats ═══ -->
+    <section class="stats-grid" id="stats-section" aria-label="Dashboard statistics">
+      <div class="stat-card reveal-zoom" style="--reveal-idx: 0;" data-accent="purple">
+        <div class="stat-card__glow"></div>
+        <div class="stat-card__content">
+          <div class="stat-card__header">
+            <span class="stat-card__icon">📊</span>
+            <div class="stat-card__label">Total Tickets</div>
+          </div>
+          <div class="stat-card__value stat-card__value--accent" id="stat-total">0</div>
+        </div>
+      </div>
+      <div class="stat-card reveal-zoom" style="--reveal-idx: 1;" data-accent="red">
+        <div class="stat-card__glow"></div>
+        <div class="stat-card__content">
+          <div class="stat-card__header">
+            <span class="stat-card__icon">🚨</span>
+            <div class="stat-card__label">Flagged</div>
+          </div>
+          <div class="stat-card__value stat-card__value--danger" id="stat-flagged">0</div>
+        </div>
+      </div>
+      <div class="stat-card reveal-zoom" style="--reveal-idx: 2;" data-accent="orange">
+        <div class="stat-card__glow"></div>
+        <div class="stat-card__content">
+          <div class="stat-card__header">
+            <span class="stat-card__icon">😠</span>
+            <div class="stat-card__label">Avg Sentiment</div>
+          </div>
+          <div class="stat-card__value stat-card__value--warn" id="stat-sentiment">0.0</div>
+        </div>
+      </div>
+      <div class="stat-card reveal-zoom" style="--reveal-idx: 3;" data-accent="blue">
+        <div class="stat-card__glow"></div>
+        <div class="stat-card__content">
+          <div class="stat-card__header">
+            <span class="stat-card__icon">⚡</span>
+            <div class="stat-card__label">Avg Urgency</div>
+          </div>
+          <div class="stat-card__value stat-card__value--electric" id="stat-urgency">0.0</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Analyze Form ═══ -->
+    <section class="reveal" aria-label="Analyze a ticket">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="section-title__icon">🔬</span>
+          Analyze Ticket
+        </h2>
+        <span class="section-title__badge">Developer Sandbox</span>
+      </div>
+
+      <div class="glass-card glass-card--form">
+        <form id="analyze-form" autocomplete="off">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label" for="ticket-id">
+                <span class="form-label__icon">🏷️</span> Ticket ID
+              </label>
+              <input class="form-input" type="text" id="ticket-id" placeholder="T-1001" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="ticket-source">
+                <span class="form-label__icon">📡</span> Source
+              </label>
+              <select class="form-select" id="ticket-source">
+                <option value="zendesk">🎧 Zendesk</option>
+                <option value="email">✉️ Email</option>
+                <option value="chat">💬 Live Chat</option>
+                <option value="manual" selected>✍️ Manual</option>
+              </select>
+            </div>
+            <div class="form-group form-group--full">
+              <label class="form-label" for="ticket-text">
+                <span class="form-label__icon">📝</span> Ticket Content
+              </label>
+              <textarea class="form-textarea" id="ticket-text" rows="5"
+                placeholder="Paste the customer's support ticket here…" required minlength="10"></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn--primary" id="analyze-btn">
+              <span class="spinner"></span>
+              <span class="btn__text">
+                <span class="btn__icon">⚡</span> Analyze Ticket
+              </span>
+            </button>
+            <button type="button" class="btn btn--ghost" id="clear-btn" onclick="clearForm()">
+              <span class="btn__icon">🗑️</span> Clear
+            </button>
+          </div>
+        </form>
+
+        <!-- Results Panel -->
+        <div id="results-panel" class="results">
+          <div class="results__header">
+            <div class="results__title">
+              <span class="results__title-icon">📋</span>
+              <span>Analysis Results</span>
+            </div>
+            <div id="res-flagged"></div>
+          </div>
+
+          <div class="scores-grid">
+            <div class="score-item">
+              <div class="score-item__ring-wrapper">
+                <svg class="score-ring" viewBox="0 0 120 120">
+                  <circle class="score-ring__bg" cx="60" cy="60" r="52" />
+                  <circle class="score-ring__fill" id="res-sentiment-ring" cx="60" cy="60" r="52" />
+                </svg>
+                <div class="score-item__value" id="res-sentiment">—</div>
+              </div>
+              <div class="score-item__label">Sentiment</div>
+              <div class="score-item__bar">
+                <div class="score-item__fill" id="res-sentiment-bar"></div>
+              </div>
+            </div>
+            <div class="score-item">
+              <div class="score-item__ring-wrapper">
+                <svg class="score-ring" viewBox="0 0 120 120">
+                  <circle class="score-ring__bg" cx="60" cy="60" r="52" />
+                  <circle class="score-ring__fill" id="res-urgency-ring" cx="60" cy="60" r="52" />
+                </svg>
+                <div class="score-item__value" id="res-urgency">—</div>
+              </div>
+              <div class="score-item__label">Urgency</div>
+              <div class="score-item__bar">
+                <div class="score-item__fill" id="res-urgency-bar"></div>
+              </div>
+            </div>
+            <div class="score-item">
+              <div class="score-item__icon-display">
+                <div id="res-churn" class="score-item__badge-value">—</div>
+              </div>
+              <div class="score-item__label">Churn Risk</div>
+            </div>
+            <div class="score-item">
+              <div class="score-item__icon-display">
+                <div id="res-tone" class="score-item__badge-value">—</div>
+              </div>
+              <div class="score-item__label">Tone</div>
+            </div>
+          </div>
+
+          <div id="res-alert-reason" style="display:none;"></div>
+          <div id="res-reason" style="display:none;"></div>
+          <div id="res-tags" style="display:none;"></div>
+          <div id="res-draft-reply" style="display:none;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Ticket History ═══ -->
+    <section class="reveal" aria-label="Ticket history">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="section-title__icon">📁</span>
+          Ticket History
+        </h2>
+        <span class="section-title__badge" id="ticket-count-badge">0 records</span>
+      </div>
+
+      <div class="glass-card glass-card--table">
+        <div class="table-controls">
+          <div class="filter-group">
+            <button class="filter-btn active" data-filter="all">All Tickets</button>
+            <button class="filter-btn" data-filter="flagged">🚨 Flagged Only</button>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button id="refresh-btn" class="btn btn--ghost" onclick="handleRefresh(this)">
+              <span class="btn__icon">🔄</span> Refresh
+            </button>
+            <button id="reset-all-btn" class="btn btn--danger btn--ghost" onclick="resetAllTickets(this)" style="border-color: rgba(239, 68, 68, 0.3); color: var(--score-red);">
+              <span class="btn__icon">🗑️</span> Reset Data
+            </button>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="ticket-table">
+            <thead>
+              <tr>
+                <th>Ticket ID</th>
+                <th>Source</th>
+                <th>Tone</th>
+                <th>Sentiment</th>
+                <th>Urgency</th>
+                <th>Churn</th>
+                <th>Flag</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="tickets-tbody">
+            </tbody>
+          </table>
+        </div>
+
+        <div id="tickets-empty" class="empty-state" style="display:none;">
+          <div class="empty-state__icon">📭</div>
+          <div class="empty-state__text">No tickets yet. Analyze one above to get started!</div>
+          <div class="empty-state__hint">Use the Developer Sandbox to simulate incoming tickets</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Footer ═══ -->
+    <footer class="footer">
+      <div class="footer__content">
+        <span class="footer__logo">🛡️ Sentinel</span>
+        <span class="footer__divider">·</span>
+        <span>AI-Powered Sentiment &amp; Urgency Detection</span>
+        <span class="footer__divider">·</span>
+        <span class="footer__tech">Groq + Llama 3.3</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
