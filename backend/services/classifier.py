@@ -33,7 +33,7 @@ Scoring guide:
 Return ONLY the JSON object. No preamble, no markdown fences.\
 """
 
-MODEL = "llama-3.3-70b-versatile"
+MODEL = "openai/gpt-oss-120b"
 
 MAX_RETRIES = 3
 RETRY_BASE_DELAY = 1.0  # seconds
