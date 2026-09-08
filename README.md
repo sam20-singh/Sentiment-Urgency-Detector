@@ -200,7 +200,7 @@ Liveness check for deployment monitoring. Returns `{"status":"ok", "model":"llam
 
 This application is **live and publicly deployed** on **[Render](https://render.com)** — a free cloud hosting platform for web services.
 
-🔗 **Live URL**: [https://sentiment-urgency-detector.onrender.com](https://sentiment-urgency-detector.onrender.com/)
+🔗 **Live URL**: https://sentiment-urgency-detector-q85e.onrender.com/
 
 ### Deployment Configuration
 
