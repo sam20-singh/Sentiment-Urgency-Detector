@@ -1,6 +1,6 @@
 # Sentinel — Sentiment & Urgency Detector
 
-> ### 🌐 **[Live Demo → https://sentiment-urgency-detector.onrender.com](https://sentiment-urgency-detector.onrender.com/)**
+> ### 🌐 **[Live Demo →https://sentiment-urgency-detector-q85e.onrender.com/
 > **Try it now — no setup required!** The app is deployed and publicly accessible.
 
 Sentinel is a real-time, AI-powered customer support ticket analyzer. Built on a blazing-fast **FastAPI** backend and an ultra-premium vanilla frontend, it uses **Groq Cloud's Llama 3.3 70B** model to instantly evaluate inbound support tickets. 
